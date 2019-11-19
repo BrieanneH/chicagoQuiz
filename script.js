@@ -1,21 +1,84 @@
-var quizBox=document.getElementById('questionBox');
-var op1= document.getElementById('op1');
-var op2= document.getElementById('op2');
-var op3= document.getElementById('op3');
-var op4= document.getElementById('op4');
 
-var app{
+/*grabbing my versatile button and setting its values*/
+var submitBtn = document.getElementById('myBtn');
+var currentQuestion = 0;
+var score =0;
 
-    questions:[ //how to enter questions.js script 
-    ],
 
-    index:0,
-    load: function(){
-        quizBox.innerHTML=this.questions[this.index].q;
-        op1.innerHTML=this.questions[this.index].options[0;]
-        op2.innerHTML=this.questions[this.index].options[1;]
-        op3.innerHTML=this.questions[this.index].options[2;]
-        op4.innerHTML=this.questions[this.index].options[3;]
+var quizForm = document.getElementById('quiz');
+var question;
+var choices;
+/*adding radio buttons to make my life easier*/
+var radioButtons = document.getElementsByName('radioOptions');
+var index = 0;
+
+function startQuiz() {
+	
+    if (currentQuestion === 0) {
+        submitBtn.value = "Start Quiz";
     }
-    
 }
+
+/*loop for questions and choices*/
+function showQuestion () {
+    choices = allQuestions[currentQuestion].choices;
+    question = allQuestions[currentQuestion].title;
+    if (currentQuestion < allQuestions.length) {
+        submitBtn.value = "Next";
+        quizForm.innerHTML = "<h1>" + question + "</h1>";
+        for (var i = 0; i < choices.length; i++) {
+            quizForm.innerHTML += "<label><input type='radio' name='radioOptions' value='" + choices[i] + "'/>" + choices[i] + "</label>";
+        }
+        if (currentQuestion == allQuestions.length - 1) {
+            submitBtn.value = "Submit";
+        } else if (currentQuestion > allQuestions.length - 1) {
+            calcQuiz();
+        }
+    }
+}
+/*checking users selection*/
+function usersInput() {
+
+    if (radioButtons.length > 1) {
+
+            var checked = false;
+        for (var i = 0; i < radioButtons.length; i++) {
+            var selection = radioButtons[i];
+
+             if (selection.checked) {
+
+                var index = [i];
+                if (i === allQuestions[currentQuestion].answer) {
+                    score++;
+
+                }
+                if (currentQuestion < allQuestions.length -1) {
+                    currentQuestion++;
+
+                } else {
+                    console.log('quiz complete');
+                    calcQuiz();
+                   return false;
+                }
+                break;
+            }
+        }
+        
+    }
+        showQuestion();
+}
+
+function calcQuiz() {
+    quizForm.innerHTML = "<h1>Quiz complete!</h1><p class='total'>Your score is " + score + " out of " + allQuestions.length + "</h1>";
+
+    submitBtn.remove();
+}
+window.onload = startQuiz();
+submitBtn.addEventListener('click', usersInput);
+
+
+/* set up form iput for highscore
+/* save to local storage
+
+var score = 0;
+var highscore = localStorage.getItem("highscore")*/
